@@ -110,10 +110,10 @@ const char* html PROGMEM = R"HTMLHOMEPAGE(
     </div>
     <hr /> -->
     <div style="display: flex; justify-content: space-around">
-      <button onclick="general('Buzzer&value=1')">Buzzer1</button>
-      <button onclick="general('Buzzer&value=2')">Buzzer2</button>
-      <button onclick="general('Buzzer&value=3')">Buzzer3</button>
-      <button onclick="general('Buzzer&value=4')">Buzzer4</button>
+      <button onclick="general('Buzzer&value=1')">Beethoven</button>
+      <button onclick="general('Buzzer&value=2')">Mozart</button>
+      <button onclick="general('Buzzer&value=3')">Bach</button>
+      <button onclick="general('Buzzer&value=4')">Grieg</button>
     </div>
     <hr />
     <div style="display: flex; justify-content: space-around">

@@ -42,13 +42,24 @@
 #define A4 441
 #define B4 495
 
+#define DS4 311
+#define FS4 370
+#define GS4 415
+#define AS4 466
+
 #define C5 525
+#define CS5 554
 #define D5 589
-#define E5 661
-#define F5 700
-#define G5 786
-#define A5 882
-#define B5 990
+#define DS5 622
+#define E5 659
+#define F5 698
+#define FS5 740
+#define G5 784
+#define GS5 831
+#define A5 880
+#define AS5 932
+#define B5 988
+#define C6 1047
 #define N 0
 
 extern vehicle Acebott;
@@ -85,17 +96,56 @@ int length1;
 int length2;
 int length3;
 
-int tune0[] = { C4, N, C4, G4, N, G4, A4, N, A4, G4, N, F4, N, F4, E4, N, E4, D4, N, D4, C4 };
-float durt0[] = { 0.99, 0.01, 1, 0.99, 0.01, 1, 0.99, 0.01, 1, 1.95, 0.05, 0.99, 0.01, 1, 0.99, 0.01, 1, 0.99, 0.01, 1, 2 };
+// Melodia, en milisegundos. Dominio publico, una sola voz.
+int tune0[] = {
+  G4, G4, G4, DS4, N, F4, F4, F4, D4, N,
+  G4, G4, G4, DS4, N, F4, F4, F4, D4, N,
+  G4, G4, G4, DS4, F4, F4, F4, D4,
+  G4, G4, G4, DS4, D4, D4, D4, C5
+};
+uint16_t durt0[] = {
+  170, 170, 170, 900, 220, 170, 170, 170, 900, 280,
+  150, 150, 150, 700, 180, 150, 150, 150, 700, 200,
+  140, 140, 140, 420, 140, 140, 140, 420,
+  130, 130, 130, 360, 130, 130, 130, 800
+};
 
-int tune1[] = { E4, N, E4, N, E4, N, E4, N, E4, N, E4, N, E4, G4, C4, D4, E4 };
-float durt1[] = { 0.49, 0.01, 0.49, 0.01, 0.99, 0.01, 0.49, 0.01, 0.49, 0.01, 0.99, 0.01, 0.5, 0.5, 0.75, 0.25, 1 };
+int tune1[] = {
+  G4, D4, G4, D4, G4, D4, G4, B4, D5, N,
+  C5, A4, FS4, A4, D4, FS4,
+  G4, D5, B4, G4, B4, G4, A4, G4
+};
+uint16_t durt1[] = {
+  300, 150, 300, 150, 150, 150, 150, 150, 450, 80,
+  300, 150, 150, 150, 150, 450,
+  150, 150, 150, 150, 150, 150, 300, 520
+};
 
-int tune2[] = { C5, N, C5, N, C5, G4, E5, N, E5, N, E5, C5, N, C5, E5, G5, N, G5, F5, E5, D5, N };
-float durt2[] = { 0.49, 0.01, 0.49, 0.01, 1, 1, 0.49, 0.01, 0.49, 0.01, 1, 0.99, 0.01, 0.5, 0.5, 0.99, 0.01, 1, 0.5, 0.5, 1, 1 };
+int tune2[] = {
+  D5, G4, A4, B4, C5, D5, G4, G4,
+  E5, C5, D5, E5, FS5, G5, G4, G4,
+  C5, D5, C5, B4, A4, B4, C5, A4,
+  D5, G4, A4, B4, C5, D5, G4
+};
+uint16_t durt2[] = {
+  340, 340, 170, 170, 170, 340, 340, 340,
+  340, 340, 170, 170, 170, 340, 340, 340,
+  340, 170, 170, 340, 170, 170, 340, 340,
+  340, 340, 170, 170, 170, 340, 680
+};
 
-int tune3[] = { C4, N, C4, N, C4, G3, A3, N, A3, G3, E4, N, E4, D4, N, D4, C4 };
-float durt3[] = { 0.99, 0.01, 0.99, 0.01, 1, 1, 0.99, 0.01, 1, 2, 0.99, 0.01, 1, 0.99, 0.01, 1, 1 };
+int tune3[] = {
+  B4, CS5, D5, E5, B4, CS5, D5, E5, B4, CS5, D5, E5, D5, CS5, B4, N,
+  B4, CS5, D5, E5, B4, CS5, D5, E5, B4, CS5, D5, E5, D5, CS5, B4, N,
+  B4, CS5, D5, E5, B4, CS5, D5, E5, B4, CS5, D5, E5, D5, CS5, B4,
+  E5, E5, B5, E5
+};
+uint16_t durt3[] = {
+  280, 280, 280, 280, 280, 280, 280, 280, 280, 280, 280, 280, 280, 280, 280, 240,
+  170, 170, 170, 170, 170, 170, 170, 170, 170, 170, 170, 170, 170, 170, 170, 140,
+  95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95,
+  110, 110, 220, 700
+};
 
 uint32_t lastLink = 0, lastLight = 0, lastSensor = 0;
 bool linkActive = false;
@@ -136,7 +186,7 @@ void stopCar(bool center) {
   function_mode = STANDBY;
   lightDirection = 0;
   song = -1;
-  noTone(Buzzer);
+  silenceBuzzer();
   shooting = false;
   digitalWrite(Shoot_PIN, LOW);
   Acebott.Move(Stop, 0);
@@ -154,19 +204,45 @@ void refreshDistance() {
   middleDistance = UT_distance;
 }
 
+void silenceBuzzer() {
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+  ledcWriteTone(Buzzer, 0);
+#else
+  ledcWriteTone(15, 0);
+#endif
+}
+
+void playTone(int frequency) {
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+  ledcWriteTone(Buzzer, frequency > 0 ? frequency : 0);
+#else
+  ledcWriteTone(15, frequency > 0 ? frequency : 0);
+#endif
+}
+
+void setupBuzzer() {
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+  ledcAttach(Buzzer, 2000, 10);
+#else
+  ledcSetup(15, 2000, 10);
+  ledcAttachPin(Buzzer, 15);
+#endif
+  silenceBuzzer();
+}
+
 void updateMusic() {
   if (song < 0 || !due(millis(), noteDeadline)) return;
   const int *notes[] = { tune0, tune1, tune2, tune3 };
-  const float *durations[] = { durt0, durt1, durt2, durt3 };
+  const uint16_t *durations[] = { durt0, durt1, durt2, durt3 };
   const int lengths[] = { length0, length1, length2, length3 };
   if (noteIndex >= lengths[song]) {
     song = -1;
-    noTone(Buzzer);
+    silenceBuzzer();
     return;
   }
-  tone(Buzzer, notes[song][noteIndex]);
-  uint32_t scale = song == 3 ? 300 : 500;
-  noteDeadline = millis() + uint32_t(durations[song][noteIndex] * scale);
+  // tone() no cambia de nota en el ESP32 mientras el canal sigue ocupado.
+  playTone(notes[song][noteIndex]);
+  noteDeadline = millis() + durations[song][noteIndex];
   noteIndex++;
 }
 
@@ -191,6 +267,7 @@ void setup() {
   fixedServo.write(angle);
   turnServo.attach(TURN_SERVO_PIN);
   turnServo.write(angle);
+  setupBuzzer();
   Acebott.Move(Stop, 0);
   delay(3000);
 
@@ -398,7 +475,7 @@ void Servo_Move(int val_app) {
 void Buzzer_run(int M) {
   if (M < 1 || M > 4) {
     song = -1;
-    noTone(Buzzer);
+    silenceBuzzer();
     return;
   }
   song = M - 1;
